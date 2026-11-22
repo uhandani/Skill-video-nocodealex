@@ -1,0 +1,85 @@
+{
+  "fps": 30,
+  "wordsPerSecond": 2.7,
+  "brand": {
+    "cardTitle": "YOUR PROFILE",
+    "cardBadge": "in",
+    "cardName": "Passionate Team Player |",
+    "cardSubtitle": "Open to New Opportunities",
+    "cardSections": ["About", "Experience", "Skills"]
+  },
+  "scenes": [
+    {
+      "type": "hero",
+      "title": "5 AI agents roast your LinkedIn",
+      "text": "I built a crew where five AI agents roast your LinkedIn profile.",
+      "command": "/linkedin-roast",
+      "counter": { "value": "×5" }
+    },
+    {
+      "type": "lineup",
+      "title": "Five readers, five views",
+      "text": "So each one reads it like a different person: a recruiter, a founder, a peer.",
+      "count": 5
+    },
+    {
+      "type": "before-after",
+      "title": "The headline gets roasted",
+      "text": "Then each one roasts your profile headline for being generic.",
+      "stamp": "ROASTED",
+      "rewrite": false
+    },
+    {
+      "type": "lineup",
+      "title": "Five honest opinions",
+      "text": "You get five honest opinions you would never hear in real life.",
+      "signs": ["No numbers", "Too wordy", "No proof", "Boring", "Buzzwords"],
+      "counter": { "label": "Opinions", "value": "auto" }
+    },
+    {
+      "type": "before-after",
+      "title": "Every experience rewritten",
+      "text": "After roasting you, it rewrites your profile automatically, section by section.",
+      "stamp": "BEFORE",
+      "afterLabel": "AFTER"
+    },
+    {
+      "type": "card",
+      "title": "Up the search results",
+      "text": "And it adds the keywords recruiters actually search for.",
+      "heading": "About",
+      "lines": ["Senior designer for", "fintech and health apps.", "I lead product design,", "run user research and", "build design systems", "teams use."],
+      "highlights": ["product design", "user research", "design systems"],
+      "counter": { "label": "Keywords", "value": "auto" }
+    },
+    {
+      "type": "spotlight",
+      "title": "Get noticed",
+      "text": "So you finally get noticed."
+    },
+    {
+      "type": "list",
+      "title": "Up the search results",
+      "text": "More profile views, more connection requests.",
+      "panelTitle": "Invitations",
+      "items": [
+        { "name": "Maya Chen", "subtitle": "Recruiter at Northwind" },
+        { "name": "Jordan Lee", "subtitle": "Hiring Manager at Acme Labs" },
+        { "name": "Priya Patel", "subtitle": "Design Lead at Brightside" }
+      ],
+      "buttonLabel": "Accept"
+    },
+    {
+      "type": "gift",
+      "title": "Free to test",
+      "text": "It is completely free, so test it with your own profile.",
+      "counter": { "label": "Fee", "value": "$0" }
+    },
+    {
+      "type": "cta",
+      "title": "Comment LINK for the link",
+      "text": "Comment LINK and I will send you the setup link.",
+      "commentWord": "LINK"
+    }
+  ]
+}
