@@ -6,7 +6,10 @@ import { FilmFinish } from "./components/Stage";
 import {
   BeforeAfterScene,
   CardScene,
+  BoardScene,
   CtaScene,
+  TimelineScene,
+  timelineStarts,
   GiftScene,
   HeroScene,
   LineupScene,
@@ -29,6 +32,8 @@ const SCENES: Record<SceneType, React.FC<{ scene: TimedScene }>> = {
   "before-after": BeforeAfterScene,
   gift: GiftScene,
   cta: CtaScene,
+  board: BoardScene,
+  timeline: TimelineScene,
 };
 
 /** For counter.value === "auto": count what the scene has revealed so far. */
@@ -37,6 +42,7 @@ const autoCounter = (scene: TimedScene, frame: number): { value: string; bumpAt?
   if (scene.type === "lineup") starts = (scene.signs ?? []).map((_, i) => signDelay(scene, i));
   else if (scene.type === "card") starts = highlightStarts(scene);
   else if (scene.type === "list") starts = listStarts(scene);
+  else if (scene.type === "timeline") starts = timelineStarts(scene).map((s) => Math.max(0, s));
   const shown = starts.filter((s) => frame >= s);
   return { value: String(shown.length), bumpAt: shown[shown.length - 1] };
 };

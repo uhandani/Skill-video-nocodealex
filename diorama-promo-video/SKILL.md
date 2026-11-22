@@ -1,6 +1,6 @@
 ---
 name: diorama-promo-video
-description: Make vertical 9:16 short-form promo videos (Instagram Reels, TikTok, YouTube Shorts) in the "miniature diorama" style — chunky clay block mascots on a tiny game-show stage, a taped paper headline banner, a scoreboard counter, word-by-word captions on torn paper scraps, film grain, and a "comment LINK" call to action — rendered with Remotion from a simple JSON script. Use this whenever the user wants a reel/short/TikTok/promo/explainer video for an AI tool, Claude skill, prompt, app, service, template or digital product, wants a video "like this one" / "seperti video ini", asks for a "comment LINK for the link" style video, or says things like "buatkan video reels", "bikin video promosi", "video konten untuk IG", even if they don't mention Remotion or the diorama style.
+description: Make vertical 9:16 short-form promo videos (Instagram Reels, TikTok, YouTube Shorts) in the "miniature diorama" style — chunky clay block mascots on a tiny game-show stage, a taped paper headline banner, a scoreboard counter, word-by-word captions on torn paper scraps, film grain, and a "comment LINK" call to action — rendered with Remotion from a simple JSON script. Use this whenever the user wants a reel/short/TikTok/promo/explainer video for an AI tool, Claude skill, prompt, app, service, template or digital product, wants a video "like this one" / "seperti video ini", asks for a "comment LINK for the link" style video, or says things like "buatkan video reels", "bikin video promosi", "video konten untuk IG", or wants an existing video (explainer, edukasi, fun fact, history, tutorial) "restyled" / "diubah dengan gaya" this look, even if they don't mention Remotion or the diorama style.
 ---
 
 # Diorama promo video
@@ -73,6 +73,29 @@ also write the post caption in the reference pattern:
 `Comment "LINK" and I'll DM you the link to … Comment "LINK" for the link. #…`
 
 For live tweaking the user can run `npx remotion studio` inside the project.
+
+## Restyling an existing video
+When the user gives a video and asks for it "in this style", keep their story and voice and
+replace only the visuals:
+1. `bash <skill-dir>/scripts/caption_strips.sh <video> <work-dir>` — extracts the audio
+   (`voiceover.m4a`) and tiles the caption band every 0.5 s with timestamps, plus an
+   `overview.jpg`. If whisper works, `word_timings.py` is faster; when it doesn't (no model
+   download), read the strips: the highlighted word in each strip is the one being spoken at
+   that timestamp, which gives word timings to ±0.25 s. Check the band position on a probe
+   frame first — a wrong crop shows only slivers of text.
+2. Cut the transcript into beats where the original changes visuals or topic (the overview
+   shows this). One beat = one scene, 3–8 s.
+3. Choose a scene type that *shows* each beat. Explainers lean on `board` (symbols, "A → B",
+   crossing out wrong answers), `timeline` (dates, people), `card` (definitions, quotes,
+   highlighted terms), `before-after` with `rewrite:false` + `stamp` ("MITOS", "FAKE"),
+   `spotlight` (a person/the reveal), and `cta` for the closing comment prompt.
+4. Write `video.json` with `"voiceover"` and a `"captions"` array of `{word,start,end}`
+   (absolute seconds, in order). Each scene's `text` must contain exactly that scene's words
+   in order — scenes are timed from where their first word starts. A small Python script that
+   holds `start word|start word|…` per scene and emits both is the least error-prone way.
+   `assets/examples/restyle_asal_usul_x.py` is a complete worked example (a 90 s Indonesian
+   explainer on why algebra uses x, 16 scenes) — copy its structure.
+5. Preview sheet → fix → render as usual. Banners can be in the video's language.
 
 ## Customizing beyond JSON
 - Colors/cast: `palette`, `theme` and `characters` in `video.json`. In `mono` everything is

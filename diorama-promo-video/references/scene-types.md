@@ -58,6 +58,22 @@
 | `before-after` | product card gets a stamp + scorch, then a pencil rewrites it, ✓ checks, AFTER plate, confetti | `stamp`, `afterLabel`, `rewrite` (false = stamp only) |
 | `gift` | blue gift box shakes, lid pops, confetti; finished card on the desk | `count` (characters), use `counter` for the price |
 | `cta` | big character + comment box typing the keyword, Post button, confetti | `commentWord` |
+| `board` | chalkboard on an easel with big italic letters/symbols in rows; presenters in the corners | `rows` [{`glyphs`, `label`, `struck`, `highlight`, `arrows`}], `stamp` |
+| `timeline` | paper sheet with a vertical timeline; entries slide in one by one | `entries` [{`year`,`title`,`note`}], `revealFrom` |
+
+### board details
+- `rows`: 1–3 rows. One single glyph (e.g. `["x"]`) renders huge; longer rows auto-shrink.
+- Glyphs appear one by one over the first ~55% of the scene; `struck` indices get a chalk line
+  at 60%, `highlight` indices glow and grow at 72%, `stamp` slams in at 62%.
+- `arrows: true` puts → between glyphs (good for "A became B became C" etymology beats).
+- Examples: `[{"glyphs":["a","b","x"],"struck":[0,1],"highlight":[2]}]`,
+  `[{"glyphs":["a","b","c"],"label":"= known"},{"glyphs":["x","y","z"],"label":"= unknown"}]`.
+- Stick to Latin script; the bundled fonts don't cover Arabic/CJK (write transliterations).
+
+### timeline details
+- To continue a timeline in a later scene, repeat the earlier entries and set `revealFrom`
+  to the first new index — old entries are visible from frame 0, new ones animate in.
+- `counter.value: "auto"` counts revealed entries.
 
 ## Adapting the prop to other niches
 Change only `brand` — the card is generic:

@@ -156,7 +156,7 @@ export const CardScene: React.FC<SceneProps> = ({ scene }) => {
       >
         <div style={{ fontFamily: UI_FONT, fontWeight: 800, fontSize: 62, color: "#1b1720", marginBottom: 30 }}>{scene.heading ?? "About"}</div>
         {(scene.lines ?? []).map((l, i) => (
-          <div key={i} style={{ fontFamily: UI_FONT, fontSize: 44, lineHeight: 1.5, color: "#3b3540", opacity: ramp(frame, 6 + i * 4, 10) }}>
+          <div key={i} style={{ fontFamily: UI_FONT, fontSize: (scene.lines ?? []).length <= 5 ? 58 : 44, lineHeight: 1.5, color: "#3b3540", opacity: ramp(frame, 6 + i * 4, 10) }}>
             {renderLine(l)}
           </div>
         ))}
@@ -409,6 +409,182 @@ export const CtaScene: React.FC<SceneProps> = ({ scene }) => {
         </div>
       ) : null}
       <Confetti start={postAt} originY={1150} />
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------- board (chalkboard with big glyphs)
+const Stamp: React.FC<{ text: string; at: number; style?: React.CSSProperties }> = ({ text, at, style }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  if (frame < at) return null;
+  const sp = pop(frame, fps, at, 8);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        padding: "8px 30px",
+        border: "10px solid currentColor",
+        color: "#e9e9ea",
+        background: "rgba(0,0,0,0.35)",
+        fontFamily: TITLE_FONT,
+        fontSize: Math.min(92, Math.floor(1150 / Math.max(4, text.length))),
+        whiteSpace: "nowrap",
+        rotate: "-12deg",
+        scale: `${2.2 - 1.2 * sp}`,
+        opacity: Math.min(1, sp * 2),
+        ...style,
+      }}
+    >
+      {text}
+    </div>
+  );
+};
+
+export const BoardScene: React.FC<SceneProps> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const rows = scene.rows ?? [{ glyphs: ["x"] }];
+  const F = scene.frames;
+  const total = rows.reduce((a, r) => a + r.glyphs.length, 0);
+  const revealEnd = Math.max(20, Math.round(F * 0.55));
+  const step = total > 1 ? (revealEnd - 8) / (total - 1) : 0;
+  const strikeAt = Math.round(F * 0.6);
+  const glowAt = Math.round(F * 0.72);
+  const bp = pop(frame, fps, 0, 14);
+  const maxLen = Math.max(...rows.map((r) => r.glyphs.join("").length + r.glyphs.length * 0.6));
+  const longest = Math.max(...rows.map((r) => r.glyphs.length));
+  const size = Math.max(64, Math.min(rows.length === 1 && longest === 1 ? 380 : 190, Math.floor(1300 / Math.max(2, maxLen))));
+  const rowGap = rows.length > 2 ? 10 : 30;
+  let k = 0;
+  return (
+    <AbsoluteFill>
+      <Backdrop kind={scene.backdrop ?? "curtain"} />
+      <div
+        style={{
+          position: "absolute",
+          left: 90,
+          right: 90,
+          top: 420,
+          height: 780,
+          overflow: "hidden",
+          background: "radial-gradient(ellipse at 50% 40%, #3a3a3a, #1d1d1e 80%)",
+          border: "22px solid #6c6c6e",
+          boxShadow: "inset 0 0 60px rgba(0,0,0,0.7), 0 30px 60px rgba(0,0,0,0.6)",
+          translate: `0 ${(1 - bp) * 260}px`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: rowGap,
+        }}
+      >
+        {/* chalk dust */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(170deg, rgba(255,255,255,0.03) 0 3px, transparent 3px 11px)" }} />
+        {rows.map((r, ri) => (
+          <div key={ri} style={{ display: "flex", alignItems: "center", gap: size * 0.28 }}>
+            {r.glyphs.map((g, gi) => {
+              const at = Math.round(8 + step * k++);
+              const p = pop(frame, fps, at, 10);
+              const struck = r.struck?.includes(gi) && frame >= strikeAt;
+              const sp = ramp(frame, strikeAt, 8);
+              const hl = r.highlight?.includes(gi) && frame >= glowAt;
+              const hp = pop(frame, fps, glowAt, 9);
+              return (
+                <React.Fragment key={gi}>
+                  {r.arrows && gi > 0 ? (
+                    <div style={{ fontFamily: UI_FONT, fontSize: size * 0.4, color: "#a6a7a9", opacity: frame >= at ? 1 : 0 }}>→</div>
+                  ) : null}
+                  <div
+                    style={{
+                      position: "relative",
+                      fontFamily: SERIF_FONT,
+                      fontStyle: "italic",
+                      fontWeight: 600,
+                      fontSize: size,
+                      lineHeight: 1.05,
+                      color: struck ? "#7a7a7c" : "#f0f0f0",
+                      textShadow: hl ? `0 0 ${30 * hp}px rgba(255,255,255,0.9)` : "0 0 6px rgba(255,255,255,0.25)",
+                      scale: `${p * (hl ? 1 + 0.25 * hp : 1)}`,
+                      opacity: frame >= at ? 1 : 0,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {g}
+                    {r.struck?.includes(gi) && frame >= strikeAt ? (
+                      <div style={{ position: "absolute", left: "-8%", top: "52%", height: Math.max(6, size * 0.06), width: `${116 * sp}%`, background: "#f0f0f0", rotate: "-14deg", borderRadius: 4 }} />
+                    ) : null}
+                  </div>
+                </React.Fragment>
+              );
+            })}
+            {r.label ? (
+              <div style={{ fontFamily: UI_FONT, fontWeight: 600, fontSize: Math.max(30, size * 0.26), color: "#bdbec0", marginLeft: 6, opacity: ramp(frame, Math.round(8 + step * (k - 1)) + 6, 10) }}>{r.label}</div>
+            ) : null}
+          </div>
+        ))}
+        {scene.stamp ? <Stamp text={scene.stamp} at={Math.round(F * 0.62)} style={{ bottom: 60, left: "50%", translate: "-50% 0" }} /> : null}
+      </div>
+      {/* easel legs */}
+      <div style={{ position: "absolute", left: 200, top: 1200, width: 28, height: 240, background: "#5a5b5d", rotate: "8deg" }} />
+      <div style={{ position: "absolute", right: 200, top: 1200, width: 28, height: 240, background: "#5a5b5d", rotate: "-8deg" }} />
+      {/* presenters stand in front of the easel, in the corners */}
+      <Placed x={130} y={1440} size={0.62} i={1} talking />
+      <Placed x={950} y={1440} size={0.62} i={3} />
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------- timeline
+export const timelineStarts = (scene: TimedScene) => {
+  const n = scene.entries?.length ?? 0;
+  const from = scene.revealFrom ?? 0;
+  const k = Math.max(1, n - from);
+  return Array.from({ length: n }, (_, i) => (i < from ? -100 : Math.round(10 + ((i - from) * (scene.frames - 30)) / k)));
+};
+export const TimelineScene: React.FC<SceneProps> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const { theme } = useVideo();
+  const entries = scene.entries ?? [];
+  const starts = timelineStarts(scene);
+  const p = pop(frame, fps, 0, 14);
+  return (
+    <AbsoluteFill>
+      <Backdrop kind={scene.backdrop ?? "wall"} />
+      <Placed x={930} y={1400} size={0.7} i={2} talking />
+      <div
+        style={{
+          position: "absolute",
+          left: 80,
+          right: 200,
+          top: 430,
+          height: 980,
+          background: "#f0f0f0",
+          boxShadow: "0 30px 60px rgba(0,0,0,0.55)",
+          rotate: "-1.5deg",
+          padding: "50px 46px 40px 110px",
+          translate: `0 ${(1 - p) * 300}px`,
+          fontFamily: UI_FONT,
+        }}
+      >
+        <div style={{ position: "absolute", left: 62, top: 60, bottom: 60, width: 8, background: theme.ink, transformOrigin: "top", scale: `1 ${ramp(frame, 0, 30)}` }} />
+        {entries.map((e, i) => {
+          const s = starts[i];
+          const ep = s < 0 ? 1 : pop(frame, fps, s, 12);
+          if (s >= 0 && frame < s) return null;
+          return (
+            <div key={i} style={{ position: "relative", marginBottom: 46, translate: `${(1 - ep) * 80}px 0`, opacity: Math.min(1, ep * 1.5) }}>
+              <div style={{ position: "absolute", left: -66, top: 22, width: 36, height: 36, borderRadius: 18, background: theme.ink, border: "6px solid #f0f0f0", boxShadow: `0 0 0 4px ${theme.ink}` }} />
+              <div style={{ fontFamily: TITLE_FONT, fontSize: 84, color: theme.ink, lineHeight: 1 }}>{e.year}</div>
+              <div style={{ fontWeight: 800, fontSize: 50, color: "#231f20", marginTop: 8 }}>{e.title}</div>
+              {e.note ? (
+                <div style={{ display: "inline-block", marginTop: 12, padding: "10px 18px", background: "#e3e4e6", borderLeft: `8px solid ${theme.ink}`, fontSize: 38, color: "#333335", lineHeight: 1.3 }}>{e.note}</div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
     </AbsoluteFill>
   );
 };

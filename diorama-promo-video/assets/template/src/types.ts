@@ -19,7 +19,19 @@ export type SceneType =
   | "list" // app-style panel; rows slide in, a cursor clicks the button
   | "before-after" // product card gets stamped, then rewritten with checks + AFTER plate
   | "gift" // gift box pops open with confetti, price badge
-  | "cta"; // character + comment box typing the keyword, Post button, confetti
+  | "cta" // character + comment box typing the keyword, Post button, confetti
+  | "board" // chalkboard with big letters/symbols in rows; strike-throughs, highlights, arrows, stamp
+  | "timeline"; // vertical history timeline on paper; entries reveal one by one
+
+export type BoardRow = {
+  glyphs: string[]; // big symbols/words, e.g. ["a","b","x"] or ["syai'","xei","x"]
+  label?: string; // small note after the row, e.g. "= dicari"
+  struck?: number[]; // indices crossed out (after the row has appeared)
+  highlight?: number[]; // indices that glow/grow at the end
+  arrows?: boolean; // draw → between glyphs
+};
+
+export type TimelineEntry = { year: string; title: string; note?: string };
 
 export type Scene = {
   type: SceneType;
@@ -55,6 +67,13 @@ export type Scene = {
   rewrite?: boolean;
   // cta
   commentWord?: string;
+  // board
+  rows?: BoardRow[];
+  // timeline
+  entries?: TimelineEntry[];
+  /** timeline: entries before this index are already visible when the scene starts (continuing a timeline). */
+  revealFrom?: number;
+  // stamp also applies to `board` (slams in at ~65%)
 };
 
 export type Brand = {

@@ -5,6 +5,7 @@ import type { CharacterSpec, PaletteName, Theme } from "./types";
 
 export const TITLE_FONT = loadTitle("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily;
 export const SERIF_FONT = loadSerif("normal", { weights: ["900"], subsets: ["latin"] }).fontFamily;
+loadSerif("italic", { weights: ["600"], subsets: ["latin", "latin-ext"] });
 export const UI_FONT = loadUi("normal", { weights: ["400", "600", "800"], subsets: ["latin"] }).fontFamily;
 
 /** Grayscale ramp (light -> black) the mono palette is built from. */
