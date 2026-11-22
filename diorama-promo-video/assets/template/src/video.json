@@ -1,5 +1,6 @@
 {
   "fps": 30,
+  "palette": "mono",
   "wordsPerSecond": 2.7,
   "brand": {
     "cardTitle": "YOUR PROFILE",

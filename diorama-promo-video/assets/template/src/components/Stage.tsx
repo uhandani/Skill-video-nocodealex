@@ -71,7 +71,7 @@ export const Backdrop: React.FC<{ kind?: "curtain" | "wall" | "dark"; spot?: boo
           left: 0,
           right: 0,
           bottom: 0,
-          background: "linear-gradient(#2a2140, #15101f)",
+          background: `linear-gradient(${theme.floor[0]}, ${theme.floor[1]})`,
           boxShadow: "0 -30px 60px rgba(0,0,0,0.6)",
         }}
       />

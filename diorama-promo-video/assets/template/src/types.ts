@@ -76,16 +76,30 @@ export type Theme = {
   paper: string; // caption scrap color
   paperText: string;
   banner: string; // title banner paper
-  accent: string; // badges, buttons
+  accent: string; // badges, buttons, card header
   wood: string;
   wall: string;
   curtain: string;
+  floor: [string, string]; // stage floor gradient top -> bottom
+  ink: string; // dark text on light surfaces
+  highlight: string; // keyword marker in `card` scenes
+  positive: string; // counter numbers, checks
+  negative: string; // counter multipliers like ×5
+  signs: string[]; // protest sign colors in `lineup`
+  gift: string;
+  ribbon: string;
+  confetti: string[];
 };
+
+/** "mono" = grayscale palette (default); "warm" = original terracotta/red/navy look. */
+export type PaletteName = "mono" | "warm";
 
 export type CaptionWord = { word: string; start: number; end: number };
 
 export type VideoSpec = {
   fps?: number;
+  /** Base palette; `theme` overrides individual tokens on top of it. Default "mono". */
+  palette?: PaletteName;
   /** Words per second for auto durations when no voiceover timings exist. */
   wordsPerSecond?: number;
   brand: Brand;

@@ -6,6 +6,7 @@
 ```jsonc
 {
   "fps": 30,
+  "palette": "mono",                // "mono" (default, grayscale) | "warm" (terracotta/red/navy)
   "wordsPerSecond": 2.7,            // auto scene length when there is no voiceover timing
   "brand": {
     "cardTitle": "YOUR PROFILE",    // header of the prop card (≤ 2 words, first space becomes a line break)
@@ -15,10 +16,14 @@
     "cardSections": ["About", "Experience", "Skills"],
     "cardButtons": ["Connect", "Message"]  // optional
   },
-  "theme": {                        // optional, any subset
-    "character": "#de7350", "paper": "#c9694c", "paperText": "#fbefe2",
-    "banner": "#efe4cf", "accent": "#2f6fe0", "wood": "#6b3b22",
-    "wall": "#1f2a63", "curtain": "#5b1820"
+  "theme": {                        // optional, overrides tokens of the chosen palette (mono values shown)
+    "character": "#bdbec0", "paper": "#e3e4e6", "paperText": "#000000",
+    "banner": "#f0f0f0", "accent": "#333335", "wood": "#5a5b5d",
+    "wall": "#48494b", "curtain": "#3a3a3a", "floor": ["#333335", "#0b0b0c"],
+    "ink": "#000000", "highlight": "#bdbec0", "positive": "#000000", "negative": "#000000",
+    "signs": ["#000000", "#48494b", "#231f20", "#6c6c6e", "#333335", "#5a5b5d"],
+    "gift": "#6c6c6e", "ribbon": "#f0f0f0",
+    "confetti": ["#f0f0f0", "#cfd0d2", "#a6a7a9", "#7a7a7c", "#48494b", "#000000"]
   },
   "characters": [                   // optional cast (cycled); hats: none|frosting|cap|crown|headset|beanie
     { "hat": "frosting", "accessory": "glasses" }   // accessory: none|glasses|tie|bowtie|mustache; "color" optional

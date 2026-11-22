@@ -1,7 +1,7 @@
 # Skill: diorama-promo-video
 
 Skill Claude untuk membuat video vertikal 9:16 (Reels / TikTok / Shorts) bergaya
-"miniatur diorama": karakter balok tanah liat di panggung kecil, banner kertas berselotip,
+"miniatur diorama" dengan palet **monokrom** (abu-abu #f0f0f0 → hitam; `"palette": "warm"` untuk versi berwarna): karakter balok tanah liat di panggung kecil, banner kertas berselotip,
 counter skor, caption kata-per-kata di potongan kertas, film grain, dan CTA "komen LINK".
 
 ![contoh](diorama-promo-video/assets/example-sheet.jpg)

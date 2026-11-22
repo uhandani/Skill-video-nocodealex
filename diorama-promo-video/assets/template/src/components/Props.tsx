@@ -131,9 +131,10 @@ export const Terminal: React.FC<{ text: string; start?: number; style?: React.CS
 /** Paper confetti burst starting at `start`. */
 export const Confetti: React.FC<{ start?: number; count?: number; originY?: number }> = ({ start = 0, count = 70, originY = 600 }) => {
   const frame = useCurrentFrame();
+  const { theme } = useVideo();
   const t = frame - start;
   if (t < 0) return null;
-  const colors = ["#f4efe6", "#e8413c", "#f2b630", "#3d8bf2", "#57c46a", "#de7350"];
+  const colors = theme.confetti;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {Array.from({ length: count }).map((_, i) => {

@@ -23,7 +23,9 @@ narrative arc) and `references/scene-types.md` for every JSON field.
   script unless they say otherwise). Banners can stay English if the user prefers that "IG look".
 - **Voiceover**: do they have a recording? If not, the video still works with captions only;
   offer to write a script they can record, then sync it later (step 5).
-- Brand colors / the "prop" on the desk (profile, website, resume, store…) — sensible defaults exist.
+- The "prop" on the desk (profile, website, resume, store…) — sensible defaults exist.
+- **Palette**: monochrome grayscale is the default (`"palette": "mono"`). Use `"warm"` only
+  if the user asks for color; individual tokens can be overridden in `theme`.
 
 ### 2. Write the script first, as a table
 Follow the arc in the style guide: hook → mechanism → pain → outputs → transformation →
@@ -73,7 +75,8 @@ also write the post caption in the reference pattern:
 For live tweaking the user can run `npx remotion studio` inside the project.
 
 ## Customizing beyond JSON
-- Colors/cast: `theme` and `characters` in `video.json`.
+- Colors/cast: `palette`, `theme` and `characters` in `video.json`. In `mono` everything is
+  forced to grayscale, so a custom `theme` color only matters for its lightness.
 - New visual beat: add a scene type (steps at the end of `references/scene-types.md`).
 - Animate only with `useCurrentFrame()` + `interpolate`/`spring`; CSS transitions/animations
   don't render in Remotion. Keep y 1440–1620 free for captions.

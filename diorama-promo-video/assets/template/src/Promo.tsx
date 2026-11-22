@@ -16,7 +16,7 @@ import {
   listStarts,
   signDelay,
 } from "./scenes/Scenes";
-import { DEFAULT_CREW, DEFAULT_THEME } from "./theme";
+import { DEFAULT_CREW, PALETTES } from "./theme";
 import { buildTimeline, type TimedScene } from "./timeline";
 import type { SceneType, VideoSpec } from "./types";
 
@@ -72,7 +72,7 @@ export const Promo: React.FC<VideoSpec> = (spec) => {
   const { scenes } = useMemo(() => buildTimeline(spec), [spec]);
   const ctx = useMemo(
     () => ({
-      theme: { ...DEFAULT_THEME, ...(spec.theme ?? {}) },
+      theme: { ...PALETTES[spec.palette ?? "mono"], ...(spec.theme ?? {}) },
       brand: spec.brand,
       crew: spec.characters && spec.characters.length ? spec.characters : DEFAULT_CREW,
     }),
@@ -80,7 +80,8 @@ export const Promo: React.FC<VideoSpec> = (spec) => {
   );
   return (
     <VideoCtx.Provider value={ctx}>
-      <AbsoluteFill style={{ background: "#0d0a14" }}>
+      {/* mono: a grayscale filter over everything guarantees no stray hue (hats, stamps, lights) */}
+      <AbsoluteFill style={{ background: "#0b0b0c", filter: (spec.palette ?? "mono") === "mono" ? "grayscale(1)" : undefined }}>
         {scenes.map((s, i) => (
           <Sequence key={i} from={s.from} durationInFrames={s.frames} name={`${i + 1}. ${s.type} — ${s.title}`}>
             <SceneShell scene={s} />

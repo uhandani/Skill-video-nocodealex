@@ -13,6 +13,15 @@ Use this when tuning a video or deciding which scene type fits a beat.
   a resume, a store page) appears as a card lying on the desk that gets stamped, burned,
   highlighted, rewritten.
 
+## Palette
+Default is **monochrome**: a neutral gray ramp from `#f0f0f0` to `#000000`
+(`GRAYS` in `src/theme.ts`). Light clay characters on charcoal curtains, white paper banner
+and caption scraps with black type, black protest signs, gray gift box. In `mono` a
+grayscale filter sits over the whole frame, so any leftover hue (hats, stamps, lights) is
+neutralized too. Separate things by *value* (light vs dark), not hue: keep characters light,
+backgrounds dark, and text black-on-light. `"palette": "warm"` restores the original
+terracotta / red curtain / navy wall look of the reference reel.
+
 ## Typography (three layers, always the same positions)
 1. **Taped paper banner** at the top — ALL CAPS heavy sans (Archivo Black), cream paper, two strips
    of masking tape. 2–5 words. It is the *chapter title* of the beat, not the voiceover.

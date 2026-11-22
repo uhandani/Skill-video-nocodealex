@@ -5,7 +5,7 @@ import { Backdrop, Desk } from "../components/Stage";
 import { Booth, Confetti, Cursor, ProductCard, Sign, Terminal } from "../components/Props";
 import { Block } from "../components/Block";
 import { clamp, pop, ramp, useVideo } from "../components/anim";
-import { SERIF_FONT, TITLE_FONT, UI_FONT } from "../theme";
+import { SERIF_FONT, TITLE_FONT, UI_FONT, shade } from "../theme";
 import type { TimedScene } from "../timeline";
 
 export type SceneProps = { scene: TimedScene };
@@ -68,8 +68,8 @@ export const HeroScene: React.FC<SceneProps> = ({ scene }) => {
 };
 
 // ---------------------------------------------------------------- lineup
-const SIGN_COLORS = ["#d8342b", "#e8662c", "#c3262f", "#8a3fd6", "#2f6fe0", "#2a9a4a"];
 export const LineupScene: React.FC<SceneProps> = ({ scene }) => {
+  const { theme } = useVideo();
   const n = Math.min(6, scene.count ?? 5);
   const step = 1000 / n;
   const xs = Array.from({ length: n }, (_, i) => 40 + step * i + step / 2);
@@ -81,7 +81,7 @@ export const LineupScene: React.FC<SceneProps> = ({ scene }) => {
         <Placed key={i} x={x} y={1050} size={0.62} i={i} drop={i * 3} talking={signs.length === 0} />
       ))}
       {signs.map((t, i) => (
-        <Sign key={i} text={t} color={SIGN_COLORS[i % SIGN_COLORS.length]} delay={signDelay(scene, i)} style={{ left: xs[i % n] - 85, top: 600 }} />
+        <Sign key={i} text={t} color={theme.signs[i % theme.signs.length]} delay={signDelay(scene, i)} style={{ left: xs[i % n] - 85, top: 600 }} />
       ))}
       {scene.booths !== false
         ? xs.map((x, i) => (
@@ -106,6 +106,7 @@ export const highlightStarts = (scene: TimedScene) => {
 export const CardScene: React.FC<SceneProps> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { theme } = useVideo();
   const hl = scene.highlights ?? [];
   const starts = highlightStarts(scene);
   const p = pop(frame, fps, 0, 14);
@@ -120,8 +121,9 @@ export const CardScene: React.FC<SceneProps> = ({ scene }) => {
         <span
           key={k}
           style={{
-            color: prog > 0.5 ? "#1d4fd8" : undefined,
-            backgroundImage: "linear-gradient(#ffe45c, #ffe45c)",
+            color: prog > 0.5 ? theme.ink : undefined,
+            fontWeight: prog > 0.5 ? 800 : undefined,
+            backgroundImage: `linear-gradient(${theme.highlight}, ${theme.highlight})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: `${prog * 100}% 70%`,
             backgroundPosition: "0 70%",
@@ -317,6 +319,7 @@ export const BeforeAfterScene: React.FC<SceneProps> = ({ scene }) => {
 export const GiftScene: React.FC<SceneProps> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { theme } = useVideo();
   const openAt = Math.round(scene.frames * 0.3);
   const lid = pop(frame, fps, openAt, 9);
   const shake = frame < openAt ? Math.sin(frame * 1.7) * 4 : 0;
@@ -333,14 +336,14 @@ export const GiftScene: React.FC<SceneProps> = ({ scene }) => {
         </div>
       </Desk>
       <div style={{ position: "absolute", left: 90, top: 900, rotate: `${shake - 8}deg` }}>
-        <Block w={340} h={280} d={70} color="#2f6fe0">
-          <div style={{ position: "absolute", left: 140, top: 0, bottom: 0, width: 60, background: "#f2c23a" }} />
+        <Block w={340} h={280} d={70} color={theme.gift}>
+          <div style={{ position: "absolute", left: 140, top: 0, bottom: 0, width: 60, background: theme.ribbon }} />
         </Block>
         <div style={{ position: "absolute", left: -10, top: -40, translate: `${lid * 60}px ${-lid * 260}px`, rotate: `${lid * 35}deg` }}>
-          <Block w={380} h={70} d={70} color="#3d7ef0">
-            <div style={{ position: "absolute", left: 160, top: 0, bottom: 0, width: 60, background: "#f2c23a" }} />
+          <Block w={380} h={70} d={70} color={shade(theme.gift, 0.1)}>
+            <div style={{ position: "absolute", left: 160, top: 0, bottom: 0, width: 60, background: theme.ribbon }} />
           </Block>
-          <div style={{ position: "absolute", left: 140, top: -50, width: 130, height: 70, background: "#f2c23a", clipPath: "polygon(0 0,50% 60%,100% 0,100% 100%,50% 70%,0 100%)" }} />
+          <div style={{ position: "absolute", left: 140, top: -50, width: 130, height: 70, background: theme.ribbon, clipPath: "polygon(0 0,50% 60%,100% 0,100% 100%,50% 70%,0 100%)" }} />
         </div>
       </div>
       <Confetti start={openAt} originY={850} count={90} />

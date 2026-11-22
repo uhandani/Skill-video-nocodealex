@@ -73,7 +73,8 @@ export const Counter: React.FC<{ label?: string; value: string; delay?: number; 
   // bumpAt = frame when the value last changed -> quick punch
   const since = bumpAt === undefined ? 99 : frame - bumpAt;
   const bump = since >= 0 && since < 10 ? 1 + 0.35 * Math.sin((since / 10) * Math.PI) : 1;
-  const color = /^[x×]/i.test(value) ? "#d0432f" : "#2a9a4a";
+  const { theme } = useVideo();
+  const color = /^[x×]/i.test(value) ? theme.negative : theme.positive;
   return (
     <div
       style={{
